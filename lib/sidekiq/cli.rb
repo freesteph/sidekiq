@@ -291,6 +291,12 @@ module Sidekiq # :nodoc:
           cap.concurrency = cap_config[:concurrency]
         end
       end
+
+      @config.capsules = @config.capsules.reject do |name, cap_config|
+        next if name == "default"
+
+        cap_config.queues.intersect?(opts[:queues])
+      end
     end
 
     def boot_application
